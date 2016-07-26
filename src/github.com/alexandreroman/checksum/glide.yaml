@@ -1,3 +1,0 @@
-package: github.com/alexandreroman/checksum
-import:
-- package: gopkg.in/alecthomas/kingpin.v2

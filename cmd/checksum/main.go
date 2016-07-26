@@ -2,16 +2,11 @@
 package main
 
 import (
-	"crypto/md5"
-	"crypto/sha1"
-	"crypto/sha256"
-	"fmt"
-	"hash"
-	"io"
 	"os"
 	"path/filepath"
 	"sync"
 
+	"github.com/alexandreroman/checksum"
 	"github.com/alexandreroman/checksum/logger"
 	"gopkg.in/alecthomas/kingpin.v2"
 )
@@ -34,38 +29,6 @@ var (
 // Declare generic checksum function signature.
 type ChecksumFunc func(string) (string, error)
 
-func genericChecksum(path string, algoName string, algoHash hash.Hash) (string, error) {
-	logger.Debug("Computing %s checksum for file: %s", algoName, path)
-	if file, err := os.Open(path); err != nil {
-		return "", fmt.Errorf("error while opening file: %v", err)
-	} else {
-		defer file.Close()
-		if _, err := io.Copy(algoHash, file); err != nil {
-			return "", fmt.Errorf("error while reading file: %v", err)
-		} else {
-			// Convert hash result to hexadecimal string.
-			r := fmt.Sprintf("%x", algoHash.Sum(nil))
-			logger.Debug("%s for %s: %s", algoName, path, r)
-			return r, nil
-		}
-	}
-}
-
-// Compute MD5 checksum from a file.
-func md5Checksum(path string) (string, error) {
-	return genericChecksum(path, "MD5", md5.New())
-}
-
-// Compute SHA-1 checksum from a file.
-func sha1Checksum(path string) (string, error) {
-	return genericChecksum(path, "SHA-1", sha1.New())
-}
-
-// Compute SHA-256 checksum from a file.
-func sha256Checksum(path string) (string, error) {
-	return genericChecksum(path, "SHA-256", sha256.New())
-}
-
 // Application entry point.
 func main() {
 	kingpin.UsageTemplate(kingpin.CompactUsageTemplate).Version("1.0.0").Author("Alexandre Roman")
@@ -80,13 +43,13 @@ func main() {
 	switch kingpin.MustParse(app.Parse(os.Args[1:])) {
 	case md5Cmd.FullCommand():
 		root = *md5File
-		algo = md5Checksum
+		algo = checksum.MD5Checksum
 	case sha1Cmd.FullCommand():
 		root = *sha1File
-		algo = sha1Checksum
+		algo = checksum.SHA1Checksum
 	case sha256Cmd.FullCommand():
 		root = *sha256File
-		algo = sha256Checksum
+		algo = checksum.SHA256Checksum
 	default:
 		logger.Fatal("Not yet implemented!")
 	}
