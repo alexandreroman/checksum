@@ -31,16 +31,16 @@ func genericChecksum(path string, algoName string, algoHash hash.Hash) (string, 
 }
 
 // Compute MD5 checksum from a file.
-func MD5Checksum(path string) (string, error) {
+func MD5(path string) (string, error) {
 	return genericChecksum(path, "MD5", md5.New())
 }
 
 // Compute SHA-1 checksum from a file.
-func SHA1Checksum(path string) (string, error) {
+func SHA1(path string) (string, error) {
 	return genericChecksum(path, "SHA-1", sha1.New())
 }
 
 // Compute SHA-256 checksum from a file.
-func SHA256Checksum(path string) (string, error) {
+func SHA256(path string) (string, error) {
 	return genericChecksum(path, "SHA-256", sha256.New())
 }

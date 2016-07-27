@@ -43,13 +43,13 @@ func main() {
 	switch kingpin.MustParse(app.Parse(os.Args[1:])) {
 	case md5Cmd.FullCommand():
 		root = *md5File
-		algo = checksum.MD5Checksum
+		algo = checksum.MD5
 	case sha1Cmd.FullCommand():
 		root = *sha1File
-		algo = checksum.SHA1Checksum
+		algo = checksum.SHA1
 	case sha256Cmd.FullCommand():
 		root = *sha256File
-		algo = checksum.SHA256Checksum
+		algo = checksum.SHA256
 	default:
 		logger.Fatal("Not yet implemented!")
 	}
